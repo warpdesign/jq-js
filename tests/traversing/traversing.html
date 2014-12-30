@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>JQ - Traversing</title>
+  <link rel="stylesheet" href="../qunit/css/qunit-1.12.0.css">
+  <link rel="Stylesheet" media="screen" href="../data/testsuite.css" />
+</head>
+<body id="body">
+	<div id="qunit"></div>
+
+	<!-- Test HTML -->
+	<!-- this iframe is outside the #qunit-fixture so it won't reload constantly wasting time, but it means the tests must be "safe" and clean up after themselves -->
+	<iframe id="loadediframe" name="loadediframe" style="display:none;" src="../data/iframe.html"></iframe>
+	<dl id="dl" style="position:absolute;top:-32767px;left:-32767px;width:1px;">
+	<div id="qunit-fixture">
+		<p id="firstp">See <a id="simon1" href="http://simon.incutio.com/archive/2003/03/25/#getElementsBySelector" rel="bookmark">this blog entry</a> for more information.</p>
+		<p id="ap">
+			Here are some links in a normal paragraph: <a id="google" href="http://www.google.com/" title="Google!">Google</a>,
+			<a id="groups" href="http://groups.google.com/" class="GROUPS">Google Groups (Link)</a>.
+			This link has <code><a href="http://smin" id="anchor1">class="blog"</a></code>:
+			<a href="http://diveintomark.org/" class="blog" hreflang="en" id="mark">diveintomark</a>
+
+		</p>
+		<div id="foo">
+			<p id="sndp">Everything inside the red border is inside a div with <code>id="foo"</code>.</p>
+			<p lang="en" id="en">This is a normal link: <a id="yahoo" href="http://www.yahoo.com/" class="blogTest">Yahoo</a></p>
+			<p id="sap">This link has <code><a href="#2" id="anchor2">class="blog"</a></code>: <a href="http://simon.incutio.com/" class="blog link" id="simon">Simon Willison's Weblog</a></p>
+
+		</div>
+		<div id="nothiddendiv" style="height:1px;background:white;" class="nothiddendiv">
+			<div id="nothiddendivchild"></div>
+		</div>
+		<span id="name+value"></span>
+		<p id="first">Try them out:</p>
+		<ul id="firstUL"></ul>
+		<ol id="empty"></ol>
+		<form id="form" action="formaction">
+			<label for="action" id="label-for">Action:</label>
+			<input type="text" name="action" value="Test" id="text1" maxlength="30"/>
+			<input type="text" name="text2" value="Test" id="text2" disabled="disabled"/>
+			<input type="radio" name="radio1" id="radio1" value="on"/>
+
+			<input type="radio" name="radio2" id="radio2" checked="checked"/>
+			<input type="checkbox" name="check" id="check1" checked="checked"/>
+			<input type="checkbox" id="check2" value="on"/>
+
+			<input type="hidden" name="hidden" id="hidden1"/>
+			<input type="text" style="display:none;" name="foo[bar]" id="hidden2"/>
+
+			<input type="text" id="name" name="name" value="name" />
+			<input type="search" id="search" name="search" value="search" />
+
+			<button id="button" name="button" type="button">Button</button>
+
+			<textarea id="area1" maxlength="30">foobar</textarea>
+
+			<select name="select1" id="select1">
+				<option id="option1a" class="emptyopt" value="">Nothing</option>
+				<option id="option1b" value="1">1</option>
+				<option id="option1c" value="2">2</option>
+				<option id="option1d" value="3">3</option>
+			</select>
+			<select name="select2" id="select2">
+				<option id="option2a" class="emptyopt" value="">Nothing</option>
+				<option id="option2b" value="1">1</option>
+				<option id="option2c" value="2">2</option>
+				<option id="option2d" selected="selected" value="3">3</option>
+			</select>
+			<select name="select3" id="select3" multiple="multiple">
+				<option id="option3a" class="emptyopt" value="">Nothing</option>
+				<option id="option3b" selected="selected" value="1">1</option>
+				<option id="option3c" selected="selected" value="2">2</option>
+				<option id="option3d" value="3">3</option>
+				<option id="option3e">no value</option>
+			</select>
+			<select name="select4" id="select4" multiple="multiple">
+				<optgroup disabled="disabled">
+					<option id="option4a" class="emptyopt" value="">Nothing</option>
+					<option id="option4b" disabled="disabled" selected="selected" value="1">1</option>
+					<option id="option4c" selected="selected" value="2">2</option>
+				</optgroup>
+				<option selected="selected" disabled="disabled" id="option4d" value="3">3</option>
+				<option id="option4e">no value</option>
+			</select>
+			<select name="select5" id="select5">
+				<option id="option5a" value="3">1</option>
+				<option id="option5b" value="2">2</option>
+				<option id="option5c" value="1" data-attr="">3</option>
+			</select>
+
+			<object id="object1" codebase="stupid">
+				<param name="p1" value="x1" />
+				<param name="p2" value="x2" />
+			</object>
+
+			<span id="台北Táiběi"></span>
+			<span id="台北" lang="中文"></span>
+			<span id="utf8class1" class="台北Táiběi 台北"></span>
+			<span id="utf8class2" class="台北"></span>
+			<span id="foo:bar" class="foo:bar"></span>
+			<span id="test.foo[5]bar" class="test.foo[5]bar"></span>
+
+			<foo_bar id="foobar">test element</foo_bar>
+		</form>
+		<b id="floatTest">Float test.</b>
+		<iframe id="iframe" name="iframe"></iframe>
+		<form id="lengthtest">
+			<input type="text" id="length" name="test"/>
+			<input type="text" id="idTest" name="id"/>
+		</form>
+		<table id="table"></table>
+
+		<form id="name-tests">
+			<!-- Inputs with a grouped name attribute. -->
+			<input name="types[]" id="types_all" type="checkbox" value="all" />
+			<input name="types[]" id="types_anime" type="checkbox" value="anime" />
+			<input name="types[]" id="types_movie" type="checkbox" value="movie" />
+		</form>
+
+		<form id="testForm" action="#" method="get">
+			<textarea name="T3" rows="2" cols="15">?
+Z</textarea>
+			<input type="hidden" name="H1" value="x" />
+			<input type="hidden" name="H2" />
+			<input name="PWD" type="password" value="" />
+			<input name="T1" type="text" />
+			<input name="T2" type="text" value="YES" readonly="readonly" />
+			<input type="checkbox" name="C1" value="1" />
+			<input type="checkbox" name="C2" />
+			<input type="radio" name="R1" value="1" />
+			<input type="radio" name="R1" value="2" />
+			<input type="text" name="My Name" value="me" />
+			<input type="reset" name="reset" value="NO" />
+			<select name="S1">
+				<option value="abc">ABC</option>
+				<option value="abc">ABC</option>
+				<option value="abc">ABC</option>
+			</select>
+			<select name="S2" multiple="multiple" size="3">
+				<option value="abc">ABC</option>
+				<option value="abc">ABC</option>
+				<option value="abc">ABC</option>
+			</select>
+			<select name="S3">
+				<option selected="selected">YES</option>
+			</select>
+			<select name="S4">
+				<option value="" selected="selected">NO</option>
+			</select>
+			<input type="submit" name="sub1" value="NO" />
+			<input type="submit" name="sub2" value="NO" />
+			<input type="image" name="sub3" value="NO" />
+			<button name="sub4" type="submit" value="NO">NO</button>
+			<input name="D1" type="text" value="NO" disabled="disabled" />
+			<input type="checkbox" checked="checked" disabled="disabled" name="D2" value="NO" />
+			<input type="radio" name="D3" value="NO" checked="checked" disabled="disabled" />
+			<select name="D4" disabled="disabled">
+				<option selected="selected" value="NO">NO</option>
+			</select>
+			<input id="list-test" type="text" />
+			<datalist id="datalist">
+				<option value="option"></option>
+			</datalist>
+		</form>
+		<div id="moretests">
+			<form>
+				<div id="checkedtest" style="display:none;">
+					<input type="radio" name="checkedtestradios" checked="checked"/>
+					<input type="radio" name="checkedtestradios" value="on"/>
+					<input type="checkbox" name="checkedtestcheckboxes" checked="checked"/>
+					<input type="checkbox" name="checkedtestcheckboxes" />
+				</div>
+			</form>
+			<div id="nonnodes"><span id="nonnodesElement">hi</span> there <!-- mon ami --></div>
+			<div id="t2037">
+				<div><div class="hidden">hidden</div></div>
+			</div>
+			<div id="t6652">
+				<div></div>
+			</div>
+			<div id="no-clone-exception"><object><embed></embed></object></div>
+		</div>
+
+		<div id="tabindex-tests">
+			<ol id="listWithTabIndex" tabindex="5">
+				<li id="foodWithNegativeTabIndex" tabindex="-1">Rice</li>
+				<li id="foodNoTabIndex">Beans</li>
+				<li>Blinis</li>
+				<li>Tofu</li>
+			</ol>
+
+			<div id="divWithNoTabIndex">I'm hungry. I should...</div>
+			<span>...</span><a href="#" id="linkWithNoTabIndex">Eat lots of food</a><span>...</span> |
+			<span>...</span><a href="#" id="linkWithTabIndex" tabindex="2">Eat a little food</a><span>...</span> |
+			<span>...</span><a href="#" id="linkWithNegativeTabIndex" tabindex="-1">Eat no food</a><span>...</span>
+			<span>...</span><a id="linkWithNoHrefWithNoTabIndex">Eat a burger</a><span>...</span>
+			<span>...</span><a id="linkWithNoHrefWithTabIndex" tabindex="1">Eat some funyuns</a><span>...</span>
+			<span>...</span><a id="linkWithNoHrefWithNegativeTabIndex" tabindex="-1">Eat some funyuns</a><span>...</span>
+			<input id="inputWithoutTabIndex"/>
+			<button id="buttonWithoutTabIndex"></button>
+			<textarea id="textareaWithoutTabIndex"></textarea>
+			<menu type="popup">
+				<menuitem id="menuitemWithoutTabIndex" command="submitbutton" default/>
+			</menu>
+		</div>
+
+		<div id="liveHandlerOrder">
+			<span id="liveSpan1"><a href="#" id="liveLink1"></a></span>
+			<span id="liveSpan2"><a href="#" id="liveLink2"></a></span>
+		</div>
+
+		<div id="siblingTest">
+			<em id="siblingfirst">1</em>
+			<em id="siblingnext">2</em>
+			<em id="siblingthird">
+				<em id="siblingchild">
+					<em id="siblinggrandchild">
+						<em id="siblinggreatgrandchild"></em>
+					</em>
+				</em>
+			</em>
+			<span id="siblingspan"></span>
+		</div>
+		<div id="fx-test-group" style="position: absolute; width: 1px; height: 1px; overflow: hidden;">
+			<div id="fx-queue" name="test">
+				<div id="fadein" class='chain-test' name='div'>fadeIn<div>fadeIn</div></div>
+				<div id="fadeout" class='chain-test chain-test-out'>fadeOut<div>fadeOut</div></div>
+
+				<div id="show" class='chain-test'>show<div>show</div></div>
+				<div id="hide" class='chain-test chain-test-out'>hide<div>hide</div></div>
+				<div id="easehide" class='chain-test chain-test-out'>hide<div>hide</div></div>
+
+				<div id="togglein" class='chain-test'>togglein<div>togglein</div></div>
+				<div id="toggleout" class='chain-test chain-test-out'>toggleout<div>toggleout</div></div>
+				<div id="easetoggleout" class='chain-test chain-test-out'>toggleout<div>toggleout</div></div>
+
+				<div id="slideup" class='chain-test'>slideUp<div>slideUp</div></div>
+				<div id="slidedown" class='chain-test chain-test-out'>slideDown<div>slideDown</div></div>
+				<div id="easeslideup" class='chain-test'>slideUp<div>slideUp</div></div>
+
+				<div id="slidetogglein" class='chain-test'>slideToggleIn<div>slideToggleIn</div></div>
+				<div id="slidetoggleout" class='chain-test chain-test-out'>slideToggleOut<div>slideToggleOut</div></div>
+
+				<div id="fadetogglein" class='chain-test'>fadeToggleIn<div>fadeToggleIn</div></div>
+				<div id="fadetoggleout" class='chain-test chain-test-out'>fadeToggleOut<div>fadeToggleOut</div></div>
+
+				<div id="fadeto" class='chain-test'>fadeTo<div>fadeTo</div></div>
+			</div>
+
+			<div id="fx-tests"></div>
+			<span id="display"></span>
+		</div>
+	</div>
+	</dl>
+	<map name="imgmap" id="imgmap">
+		<area shape="rect" coords="0,0,200,50">
+	</map>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script type="text/javascript">
+	$$ = jQuery.noConflict(true);
+  </script>
+  <script src="../qunit/js/qunit-1.12.0.js"></script>
+<!--
+  <script src="../../js/deferred.js"></script>
+  <script src="../../js/jq.js"></script>
+-->
+  <script src="../../build/jq.min.js"></script>    
+<script type="text/javascript">
+        if (document.location.href.match(/jquery/)) {
+            console.log('switching to jQuery');
+            $ = jQuery = jq = $$;
+        } else {
+            console.log('no need to switch', document.location.href);
+        }
+    </script>
+  <script src="../data/testinit.js"></script>
+  <script type="text/javascript">
+test( "find(String)", function() {
+	expect( 1 );
+	equal( jq("#foo").find(".blogTest").text(), "Yahoo", "Basic selector" );
+});
+
+test( "find(String) under non-elements", function() {
+	expect( 2 );
+
+	var j = jq("#nonnodes").contents();
+	equal( j.find("div").length, 0, "Check node,textnode,comment to find zero divs" );
+	equal( j.find("div").addBack().length, 3, "Check node,textnode,comment to find zero divs, but preserves pushStack" );
+});
+
+test( "find(leading combinator)", function() {
+	expect( 4 );
+
+	deepEqual( jq("#qunit-fixture").find("> div").get(), q( "foo", "nothiddendiv", "moretests", "tabindex-tests", "liveHandlerOrder", "siblingTest", "fx-test-group" ), "find child elements" );
+	deepEqual( jq("#qunit-fixture").find("> #foo, > #moretests").get(), q( "foo", "moretests" ), "find child elements" );
+	deepEqual( jq("#qunit-fixture").find("> #foo > p").get(), q( "sndp", "en", "sap" ), "find child elements" );
+
+	deepEqual( jq("#siblingTest, #siblingfirst").find("+ *").get(), q( "siblingnext", "fx-test-group" ), "ensure document order" );
+});
+
+test( "find(node|jq object)", function() {
+	expect( 12 );
+
+	var $foo = jq("#foo"),
+		$blog = jq(".blogTest"),
+		$first = jq("#first"),
+		$two = $blog.add( $first ),
+		$fooTwo = $foo.add( $blog );
+
+	equal( $foo.find( $blog ).text(), "Yahoo", "Find with blog jq object" );
+	equal( $foo.find( $blog[ 0 ] ).text(), "Yahoo", "Find with blog node" );
+	equal( $foo.find( $first ).length, 0, "#first is not in #foo" );
+	equal( $foo.find( $first[ 0 ]).length, 0, "#first not in #foo (node)" );
+	ok( $foo.find( $two ).is(".blogTest"), "Find returns only nodes within #foo" );
+	ok( $fooTwo.find( $blog ).is(".blogTest"), "Blog is part of the collection, but also within foo" );
+	ok( $fooTwo.find( $blog[ 0 ] ).is(".blogTest"), "Blog is part of the collection, but also within foo(node)" );
+
+	equal( $two.find( $foo ).length, 0, "Foo is not in two elements" );
+	equal( $two.find( $foo[ 0 ] ).length, 0, "Foo is not in two elements(node)" );
+	equal( $two.find( $first ).length, 0, "first is in the collection and not within two" );
+	equal( $two.find( $first ).length, 0, "first is in the collection and not within two(node)" );
+
+	equal( $two.find( $foo[ 0 ] ).addBack().length, 2, "find preserves the pushStack, see #12009" );
+});
+
+test("is(String|undefined)", function() {
+	expect(23);
+	ok( jq("#form").is("form"), "Check for element: A form must be a form" );
+	ok( !jq("#form").is("div"), "Check for element: A form is not a div" );
+	ok( jq("#mark").is(".blog"), "Check for class: Expected class 'blog'" );
+	ok( !jq("#mark").is(".link"), "Check for class: Did not expect class 'link'" );
+	ok( jq("#simon").is(".blog.link"), "Check for multiple classes: Expected classes 'blog' and 'link'" );
+	ok( !jq("#simon").is(".blogTest"), "Check for multiple classes: Expected classes 'blog' and 'link', but not 'blogTest'" );
+	ok( jq("#en").is("[lang=\"en\"]"), "Check for attribute: Expected attribute lang to be 'en'" );
+	ok( !jq("#en").is("[lang=\"de\"]"), "Check for attribute: Expected attribute lang to be 'en', not 'de'" );
+	ok( jq("#text1").is("[type=\"text\"]"), "Check for attribute: Expected attribute type to be 'text'" );
+	ok( !jq("#text1").is("[type=\"radio\"]"), "Check for attribute: Expected attribute type to be 'text', not 'radio'" );
+	ok( jq("#text2").is(":disabled"), "Check for pseudoclass: Expected to be disabled" );
+	ok( !jq("#text1").is(":disabled"), "Check for pseudoclass: Expected not disabled" );
+	ok( jq("#radio2").is(":checked"), "Check for pseudoclass: Expected to be checked" );
+	ok( !jq("#radio1").is(":checked"), "Check for pseudoclass: Expected not checked" );
+
+	ok( !jq("#foo").is(0), "Expected false for an invalid expression - 0" );
+	ok( !jq("#foo").is(null), "Expected false for an invalid expression - null" );
+	ok( !jq("#foo").is(""), "Expected false for an invalid expression - \"\"" );
+	ok( !jq("#foo").is(undefined), "Expected false for an invalid expression - undefined" );
+	ok( !jq("#foo").is({ plain: "object" }), "Check passing invalid object" );
+
+	// test is() with comma-separated expressions
+	ok( jq("#en").is("[lang=\"en\"],[lang=\"de\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+	ok( jq("#en").is("[lang=\"de\"],[lang=\"en\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+	ok( jq("#en").is("[lang=\"en\"] , [lang=\"de\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+	ok( jq("#en").is("[lang=\"de\"] , [lang=\"en\"]"), "Comma-separated; Check for lang attribute: Expect en or de" );
+});
+
+test("is() against non-elements (#10178)", function() {
+	expect(14);
+
+	var label, i, test,
+		collection = jq( document ),
+		tests = [ "a", "*" ],
+		nonelements = {
+			text: document.createTextNode(""),
+			comment: document.createComment(""),
+			document: document,
+			window: window,
+			array: [],
+			"plain object": {},
+			"function": function() {}
+		};
+
+	for ( label in nonelements ) {
+		collection[ 0 ] = nonelements[ label ];
+		for ( i = 0; i < tests.length; i++ ) {
+			test = tests[ i ];
+			ok( !collection.is( test ), label + " does not match \"" + test + "\"" );
+		}
+	}
+});
+
+test("is(jq)", function() {
+	expect(19);
+	ok( jq("#form").is( jq("form") ), "Check for element: A form is a form" );
+	ok( !jq("#form").is( jq("div") ), "Check for element: A form is not a div" );
+	ok( jq("#mark").is( jq(".blog") ), "Check for class: Expected class 'blog'" );
+	ok( !jq("#mark").is( jq(".link") ), "Check for class: Did not expect class 'link'" );
+	ok( jq("#simon").is( jq(".blog.link") ), "Check for multiple classes: Expected classes 'blog' and 'link'" );
+	ok( !jq("#simon").is( jq(".blogTest") ), "Check for multiple classes: Expected classes 'blog' and 'link', but not 'blogTest'" );
+	ok( jq("#en").is( jq("[lang=\"en\"]") ), "Check for attribute: Expected attribute lang to be 'en'" );
+	ok( !jq("#en").is( jq("[lang=\"de\"]") ), "Check for attribute: Expected attribute lang to be 'en', not 'de'" );
+	ok( jq("#text1").is( jq("[type=\"text\"]") ), "Check for attribute: Expected attribute type to be 'text'" );
+	ok( !jq("#text1").is( jq("[type=\"radio\"]") ), "Check for attribute: Expected attribute type to be 'text', not 'radio'" );
+	ok( !jq("#text1").is( jq("input:disabled") ), "Check for pseudoclass: Expected not disabled" );
+	ok( jq("#radio2").is( jq("input:checked") ), "Check for pseudoclass: Expected to be checked" );
+	ok( !jq("#radio1").is( jq("input:checked") ), "Check for pseudoclass: Expected not checked" );
+
+	// Some raw elements
+	ok( jq("#form").is( jq("form")[0] ), "Check for element: A form is a form" );
+	ok( !jq("#form").is( jq("div")[0] ), "Check for element: A form is not a div" );
+	ok( jq("#mark").is( jq(".blog")[0] ), "Check for class: Expected class 'blog'" );
+	ok( !jq("#mark").is( jq(".link")[0] ), "Check for class: Did not expect class 'link'" );
+	ok( jq("#simon").is( jq(".blog.link")[0] ), "Check for multiple classes: Expected classes 'blog' and 'link'" );
+	ok( !jq("#simon").is( jq(".blogTest")[0] ), "Check for multiple classes: Expected classes 'blog' and 'link', but not 'blogTest'" );
+});
+
+test("is() with :has() selectors", function() {
+	expect(6);
+
+	ok( jq("#foo").is(":has(p)"), "Check for child: Expected a child 'p' element" );
+	ok( !jq("#foo").is(":has(ul)"), "Check for child: Did not expect 'ul' element" );
+	ok( jq("#foo").is(":has(p):has(a):has(code)"), "Check for childs: Expected 'p', 'a' and 'code' child elements" );
+	ok( !jq("#foo").is(":has(p):has(a):has(code):has(ol)"), "Check for childs: Expected 'p', 'a' and 'code' child elements, but no 'ol'" );
+
+	ok( jq("#foo").is( jq("div:has(p)") ), "Check for child: Expected a child 'p' element" );
+	ok( !jq("#foo").is( jq("div:has(ul)") ), "Check for child: Did not expect 'ul' element" );
+});
+
+test("is() with positional selectors", function() {
+	expect(27);
+
+	var
+		posp = jq(
+			"<p id='posp'><a class='firsta' href='#'><em>first</em></a>" +
+			"<a class='seconda' href='#'><b>test</b></a><em></em></p>"
+		).appendTo( "#qunit-fixture" ),
+		isit = function( sel, match, expect ) {
+			equal(
+				jq( sel ).is( match ),
+				expect,
+				"jq('" + sel + "').is('" + match + "')"
+			);
+		};
+
+	isit( "#posp", "p:last", true );
+	isit( "#posp", "#posp:first", true );
+	isit( "#posp", "#posp:eq(2)", false );
+	isit( "#posp", "#posp a:first", false );
+
+	isit( "#posp .firsta", "#posp a:first", true );
+	isit( "#posp .firsta", "#posp a:last", false );
+	isit( "#posp .firsta", "#posp a:even", true );
+	isit( "#posp .firsta", "#posp a:odd", false );
+	isit( "#posp .firsta", "#posp a:eq(0)", true );
+	isit( "#posp .firsta", "#posp a:eq(9)", false );
+	isit( "#posp .firsta", "#posp em:eq(0)", false );
+	isit( "#posp .firsta", "#posp em:first", false );
+	isit( "#posp .firsta", "#posp:first", false );
+
+	isit( "#posp .seconda", "#posp a:first", false );
+	isit( "#posp .seconda", "#posp a:last", true );
+	isit( "#posp .seconda", "#posp a:gt(0)", true );
+	isit( "#posp .seconda", "#posp a:lt(5)", true );
+	isit( "#posp .seconda", "#posp a:lt(1)", false );
+
+	isit( "#posp em", "#posp a:eq(0) em", true );
+	isit( "#posp em", "#posp a:lt(1) em", true );
+	isit( "#posp em", "#posp a:gt(1) em", false );
+	isit( "#posp em", "#posp a:first em", true );
+	isit( "#posp em", "#posp a em:last", true );
+	isit( "#posp em", "#posp a em:eq(2)", false );
+
+	ok( jq("#option1b").is("#select1 option:not(:first)"), "POS inside of :not() (#10970)" );
+
+	ok( jq( posp[0] ).is("p:last"), "context constructed from a single node (#13797)" );
+	ok( !jq( posp[0] ).find("#firsta").is("a:first"), "context derived from a single node (#13797)" );
+});
+
+test("index()", function() {
+	expect( 2 );
+
+	equal( jq("#text2").index(), 2, "Returns the index of a child amongst its siblings" );
+
+	equal( jq("<div/>").index(), -1, "Node without parent returns -1" );
+});
+
+test("index(Object|String|undefined)", function() {
+	expect(16);
+
+	var elements = jq([window, document]),
+		inputElements = jq("#radio1,#radio2,#check1,#check2");
+
+	// Passing a node
+	equal( elements.index(window), 0, "Check for index of elements" );
+	equal( elements.index(document), 1, "Check for index of elements" );
+	equal( inputElements.index(document.getElementById("radio1")), 0, "Check for index of elements" );
+	equal( inputElements.index(document.getElementById("radio2")), 1, "Check for index of elements" );
+	equal( inputElements.index(document.getElementById("check1")), 2, "Check for index of elements" );
+	equal( inputElements.index(document.getElementById("check2")), 3, "Check for index of elements" );
+	equal( inputElements.index(window), -1, "Check for not found index" );
+	equal( inputElements.index(document), -1, "Check for not found index" );
+
+	// Passing a jq object
+	// enabled since [5500]
+	equal( elements.index( elements ), 0, "Pass in a jq object" );
+	equal( elements.index( elements.eq(1) ), 1, "Pass in a jq object" );
+	equal( jq("#form input[type='radio']").index( jq("#radio2") ), 1, "Pass in a jq object" );
+
+	// Passing a selector or nothing
+	// enabled since [6330]
+	equal( jq("#text2").index(), 2, "Check for index amongst siblings" );
+	equal( jq("#form").children().eq(4).index(), 4, "Check for index amongst siblings" );
+	equal( jq("#radio2").index("#form input[type='radio']") , 1, "Check for index within a selector" );
+	equal( jq("#form input[type='radio']").index( jq("#radio2") ), 1, "Check for index within a selector" );
+	equal( jq("#radio2").index("#form input[type='text']") , -1, "Check for index not found within a selector" );
+});
+
+test("filter(Selector|undefined)", function() {
+	expect(9);
+	deepEqual( jq("#form input").filter(":checked").get(), q("radio2", "check1"), "filter(String)" );
+	deepEqual( jq("p").filter("#ap, #sndp").get(), q("ap", "sndp"), "filter('String, String')" );
+	deepEqual( jq("p").filter("#ap,#sndp").get(), q("ap", "sndp"), "filter('String,String')" );
+
+	deepEqual( jq("p").filter(null).get(),      [], "filter(null) should return an empty jq object");
+	deepEqual( jq("p").filter(undefined).get(), [], "filter(undefined) should return an empty jq object");
+	deepEqual( jq("p").filter(0).get(),         [], "filter(0) should return an empty jq object");
+	deepEqual( jq("p").filter("").get(),        [], "filter('') should return an empty jq object");
+
+	// using contents will get comments regular, text, and comment nodes
+	var j = jq("#nonnodes").contents();
+	equal( j.filter("span").length, 1, "Check node,textnode,comment to filter the one span" );
+	equal( j.filter("[name]").length, 0, "Check node,textnode,comment to filter the one span" );
+});
+
+test("filter(Function)", function() {
+	expect(2);
+
+	deepEqual( jq("#qunit-fixture p").filter(function() {
+		return !jq("a", this).length;
+	}).get(), q("sndp", "first"), "filter(Function)" );
+
+	deepEqual( jq("#qunit-fixture p").filter(function(i, elem) { return !jq("a", elem).length; }).get(), q("sndp", "first"), "filter(Function) using arg" );
+});
+
+test("filter(Element)", function() {
+	expect(1);
+
+	var element = document.getElementById("text1");
+	deepEqual( jq("#form input").filter(element).get(), q("text1"), "filter(Element)" );
+});
+
+test("filter(Array)", function() {
+	expect(1);
+
+	var elements = [ document.getElementById("text1") ];
+	deepEqual( jq("#form input").filter(elements).get(), q("text1"), "filter(Element)" );
+});
+
+test("filter(jq)", function() {
+	expect(1);
+
+	var elements = jq("#text1");
+	deepEqual( jq("#form input").filter(elements).get(), q("text1"), "filter(Element)" );
+});
+
+
+test("filter() with positional selectors", function() {
+	expect(19);
+
+	var filterit = function(sel, filter, length) {
+		equal( jq( sel ).filter( filter ).length, length, "jq( " + sel + " ).filter( " + filter + " )" );
+	};
+
+	jq( "" +
+		"<p id='posp'>" +
+			"<a class='firsta' href='#'>" +
+				"<em>first</em>" +
+			"</a>" +
+			"<a class='seconda' href='#'>" +
+				"<b>test</b>" +
+			"</a>" +
+			"<em></em>" +
+		"</p>" ).appendTo( "#qunit-fixture" );
+
+	filterit( "#posp", "#posp:first", 1);
+	filterit( "#posp", "#posp:eq(2)", 0 );
+	filterit( "#posp", "#posp a:first", 0 );
+
+	// Keep in mind this is within the selection and
+	// not in relation to other elements (.is() is a different story)
+	filterit( "#posp .firsta", "#posp a:first", 1 );
+	filterit( "#posp .firsta", "#posp a:last", 1 );
+	filterit( "#posp .firsta", "#posp a:last-child", 0 );
+	filterit( "#posp .firsta", "#posp a:even", 1 );
+	filterit( "#posp .firsta", "#posp a:odd", 0 );
+	filterit( "#posp .firsta", "#posp a:eq(0)", 1 );
+	filterit( "#posp .firsta", "#posp a:eq(9)", 0 );
+	filterit( "#posp .firsta", "#posp em:eq(0)", 0 );
+	filterit( "#posp .firsta", "#posp em:first", 0 );
+	filterit( "#posp .firsta", "#posp:first", 0 );
+
+	filterit( "#posp .seconda", "#posp a:first", 1 );
+	filterit( "#posp .seconda", "#posp em:first", 0 );
+	filterit( "#posp .seconda", "#posp a:last", 1 );
+	filterit( "#posp .seconda", "#posp a:gt(0)", 0 );
+	filterit( "#posp .seconda", "#posp a:lt(5)", 1 );
+	filterit( "#posp .seconda", "#posp a:lt(1)", 1 );
+});
+
+test("closest()", function() {
+	expect( 13 );
+
+	var jq;
+
+	deepEqual( jq("body").closest("body").get(), q("body"), "closest(body)" );
+	deepEqual( jq("body").closest("html").get(), q("html"), "closest(html)" );
+	deepEqual( jq("body").closest("div").get(), [], "closest(div)" );
+	deepEqual( jq("#qunit-fixture").closest("span,#html").get(), q("html"), "closest(span,#html)" );
+
+	// Test .closest() limited by the context
+	jq = jq("#nothiddendivchild");
+	deepEqual( jq.closest("html", document.body).get(), [], "Context limited." );
+	deepEqual( jq.closest("body", document.body).get(), [], "Context limited." );
+	deepEqual( jq.closest("#nothiddendiv", document.body).get(), q("nothiddendiv"), "Context not reached." );
+
+	//Test that .closest() returns unique'd set
+	equal( jq("#qunit-fixture p").closest("#qunit-fixture").length, 1, "Closest should return a unique set" );
+
+	// Test on disconnected node
+	equal( jq("<div><p></p></div>").find("p").closest("table").length, 0, "Make sure disconnected closest work." );
+
+	// Bug #7369
+	equal( jq("<div foo='bar'></div>").closest("[foo]").length, 1, "Disconnected nodes with attribute selector" );
+	equal( jq("<div>text</div>").closest("[lang]").length, 0, "Disconnected nodes with text and non-existent attribute selector" );
+
+	ok( !jq(document).closest("#foo").length, "Calling closest on a document fails silently" );
+
+	jq = jq("<div>text</div>");
+	deepEqual( jq.contents().closest("*").get(), jq.get(), "Text node input (#13332)" );
+});
+
+test("closest() with positional selectors", function() {
+	expect( 2 );
+
+	deepEqual( jq("#qunit-fixture").closest("div:first").get(), [], "closest(div:first)" );
+	deepEqual( jq("#qunit-fixture div").closest("body:first div:last").get(), q("fx-tests"), "closest(body:first div:last)" );
+});
+
+test("closest(jq)", function() {
+	expect(8);
+	var $child = jq("#nothiddendivchild"),
+		$parent = jq("#nothiddendiv"),
+		$sibling = jq("#foo"),
+		$body = jq("body");
+	ok( $child.closest( $parent ).is("#nothiddendiv"), "closest( jq('#nothiddendiv') )" );
+	ok( $child.closest( $parent[0] ).is("#nothiddendiv"), "closest( jq('#nothiddendiv') ) :: node" );
+	ok( $child.closest( $child ).is("#nothiddendivchild"), "child is included" );
+	ok( $child.closest( $child[0] ).is("#nothiddendivchild"), "child is included  :: node" );
+	equal( $child.closest( document.createElement("div") ).length, 0, "created element is not related" );
+	equal( $child.closest( $sibling ).length, 0, "Sibling not a parent of child" );
+	equal( $child.closest( $sibling[0] ).length, 0, "Sibling not a parent of child :: node" );
+	ok( $child.closest( $body.add($parent) ).is("#nothiddendiv"), "Closest ancestor retrieved." );
+});
+
+test("not(Selector|undefined)", function() {
+	expect(11);
+	equal( jq("#qunit-fixture > p#ap > a").not("#google").length, 2, "not('selector')" );
+	deepEqual( jq("p").not(".result").get(), q("firstp", "ap", "sndp", "en", "sap", "first"), "not('.class')" );
+	deepEqual( jq("p").not("#ap, #sndp, .result").get(), q("firstp", "en", "sap", "first"), "not('selector, selector')" );
+
+	deepEqual( jq("#ap *").not("code").get(), q("google", "groups", "anchor1", "mark"), "not('tag selector')" );
+	deepEqual( jq("#ap *").not("code, #mark").get(), q("google", "groups", "anchor1"), "not('tag, ID selector')" );
+	deepEqual( jq("#ap *").not("#mark, code").get(), q("google", "groups", "anchor1"), "not('ID, tag selector')");
+
+	var all = jq("p").get();
+	deepEqual( jq("p").not(null).get(),      all, "not(null) should have no effect");
+	deepEqual( jq("p").not(undefined).get(), all, "not(undefined) should have no effect");
+	deepEqual( jq("p").not(0).get(),         all, "not(0) should have no effect");
+	deepEqual( jq("p").not("").get(),        all, "not('') should have no effect");
+
+	deepEqual(
+		jq("#form option").not("option.emptyopt:contains('Nothing'),optgroup *,[value='1']").get(),
+		q("option1c", "option1d", "option2c", "option2d", "option3c", "option3d", "option3e", "option4d", "option4e", "option5a", "option5b"),
+		"not('complex selector')"
+	);
+});
+
+test("not(Element)", function() {
+	expect(1);
+
+	var selects = jq("#form select");
+	deepEqual( selects.not( selects[1] ).get(), q("select1", "select3", "select4", "select5"), "filter out DOM element");
+});
+
+test("not(Function)", function() {
+	expect(1);
+
+	deepEqual( jq("#qunit-fixture p").not(function() { return jq("a", this).length; }).get(), q("sndp", "first"), "not(Function)" );
+});
+
+test("not(Array)", function() {
+	expect(2);
+
+	equal( jq("#qunit-fixture > p#ap > a").not(document.getElementById("google")).length, 2, "not(DOMElement)" );
+	equal( jq("p").not(document.getElementsByTagName("p")).length, 0, "not(Array-like DOM collection)" );
+});
+
+test("not(jq)", function() {
+	expect( 1 );
+
+	deepEqual( jq("p").not(jq("#ap, #sndp, .result")).get(), q("firstp", "en", "sap", "first"), "not(jq)" );
+});
+
+test("has(Element)", function() {
+	expect(3);
+	var obj, detached, multipleParent;
+
+	obj = jq("#qunit-fixture").has(jq("#sndp")[0]);
+	deepEqual( obj.get(), q("qunit-fixture"), "Keeps elements that have the element as a descendant" );
+
+	detached = jq("<a><b><i/></b></a>");
+	deepEqual( detached.has( detached.find("i")[0] ).get(), detached.get(), "...Even when detached" );
+
+	multipleParent = jq("#qunit-fixture, #header").has(jq("#sndp")[0]);
+	deepEqual( multipleParent.get(), q("qunit-fixture"), "Does not include elements that do not have the element as a descendant" );
+});
+
+test("has(Selector)", function() {
+	expect( 5 );
+
+	var obj, detached, multipleParent, multipleHas;
+
+	obj = jq("#qunit-fixture").has("#sndp");
+	deepEqual( obj.get(), q("qunit-fixture"), "Keeps elements that have any element matching the selector as a descendant" );
+
+	detached = jq("<a><b><i/></b></a>");
+	deepEqual( detached.has("i").get(), detached.get(), "...Even when detached" );
+
+	multipleParent = jq("#qunit-fixture, #header").has("#sndp");
+	deepEqual( multipleParent.get(), q("qunit-fixture"), "Does not include elements that do not have the element as a descendant" );
+
+	multipleParent = jq("#select1, #select2, #select3").has("#option1a, #option3a");
+	deepEqual( multipleParent.get(), q("select1", "select3"), "Multiple contexts are checks correctly" );
+
+	multipleHas = jq("#qunit-fixture").has("#sndp, #first");
+	deepEqual( multipleHas.get(), q("qunit-fixture"), "Only adds elements once" );
+});
+
+test("has(Arrayish)", function() {
+	expect(4);
+
+	var simple, detached, multipleParent, multipleHas;
+
+	simple = jq("#qunit-fixture").has(jq("#sndp"));
+	deepEqual( simple.get(), q("qunit-fixture"), "Keeps elements that have any element in the jq list as a descendant" );
+
+	detached = jq("<a><b><i/></b></a>");
+	deepEqual( detached.has( detached.find("i") ).get(), detached.get(), "...Even when detached" );
+
+	multipleParent = jq("#qunit-fixture, #header").has(jq("#sndp"));
+	deepEqual( multipleParent.get(), q("qunit-fixture"), "Does not include elements that do not have an element in the jq list as a descendant" );
+
+	multipleHas = jq("#qunit-fixture").has(jq("#sndp, #first"));
+	deepEqual( multipleHas.get(), q("qunit-fixture"), "Only adds elements once" );
+});
+
+test("addBack()", function() {
+	expect(5);
+	deepEqual( jq("#en").siblings().addBack().get(), q("sndp", "en", "sap"), "Check for siblings and self" );
+	deepEqual( jq("#foo").children().addBack().get(), q("foo", "sndp", "en", "sap"), "Check for children and self" );
+	deepEqual( jq("#sndp, #en").parent().addBack().get(), q("foo","sndp","en"), "Check for parent and self" );
+	deepEqual( jq("#groups").parents("p, div").addBack().get(), q("qunit-fixture", "ap", "groups"), "Check for parents and self" );
+	deepEqual( jq("#select1 > option").filter(":first-child").addBack(":last-child").get(), q("option1a", "option1d"), "Should contain the last elems plus the *filtered* prior set elements" );
+});
+
+test("siblings([String])", function() {
+	expect(6);
+	deepEqual( jq("#en").siblings().get(), q("sndp", "sap"), "Check for siblings" );
+	deepEqual( jq("#nonnodes").contents().eq(1).siblings().get(), q("nonnodesElement"), "Check for text node siblings" );
+	deepEqual( jq("#foo").siblings("form, b").get(), q("form", "floatTest", "lengthtest", "name-tests", "testForm"), "Check for multiple filters" );
+
+	var set = q("sndp", "en", "sap");
+	deepEqual( jq("#en, #sndp").siblings().get(), set, "Check for unique results from siblings" );
+	deepEqual( jq("#option5a").siblings("option[data-attr]").get(), q("option5c"), "Has attribute selector in siblings (#9261)" );
+	equal( jq("<a/>").siblings().length, 0, "Detached elements have no siblings (#11370)" );
+});
+
+test("siblings([String]) - jq only", function() {
+	expect(2);
+	deepEqual( jq("#sndp").siblings(":has(code)").get(), q("sap"), "Check for filtered siblings (has code child element)" );
+	deepEqual( jq("#sndp").siblings(":has(a)").get(), q("en", "sap"), "Check for filtered siblings (has anchor child element)" );
+});
+
+test("children([String])", function() {
+	expect(2);
+	deepEqual( jq("#foo").children().get(), q("sndp", "en", "sap"), "Check for children" );
+	deepEqual( jq("#foo").children("#en, #sap").get(), q("en", "sap"), "Check for multiple filters" );
+});
+
+test("children([String]) - jq only", function() {
+	expect(1);
+	deepEqual( jq("#foo").children(":has(code)").get(), q("sndp", "sap"), "Check for filtered children" );
+});
+
+test("parent([String])", function() {
+	expect(6);
+
+	var $el;
+
+	equal( jq("#groups").parent()[0].id, "ap", "Simple parent check" );
+	equal( jq("#groups").parent("p")[0].id, "ap", "Filtered parent check" );
+	equal( jq("#groups").parent("div").length, 0, "Filtered parent check, no match" );
+	equal( jq("#groups").parent("div, p")[0].id, "ap", "Check for multiple filters" );
+	deepEqual( jq("#en, #sndp").parent().get(), q("foo"), "Check for unique results from parent" );
+
+	$el = jq("<div>text</div>");
+	deepEqual( $el.contents().parent().get(), $el.get(), "Check for parent of text node (#13265)" );
+});
+
+test("parents([String])", function() {
+	expect(6);
+	equal( jq("#groups").parents()[0].id, "ap", "Simple parents check" );
+	deepEqual( jq("#nonnodes").contents().eq(1).parents().eq(0).get(), q("nonnodes"), "Text node parents check" );
+	equal( jq("#groups").parents("p")[0].id, "ap", "Filtered parents check" );
+	equal( jq("#groups").parents("div")[0].id, "qunit-fixture", "Filtered parents check2" );
+	deepEqual( jq("#groups").parents("p, div").get(), q("ap", "qunit-fixture"), "Check for multiple filters" );
+	deepEqual( jq("#en, #sndp").parents().get(), q("foo", "qunit-fixture", "dl", "body", "html"), "Check for unique results from parents" );
+});
+
+test("parentsUntil([String])", function() {
+	expect(10);
+
+	var parents = jq("#groups").parents();
+
+	deepEqual( jq("#groups").parentsUntil().get(), parents.get(), "parentsUntil with no selector (nextAll)" );
+	deepEqual( jq("#groups").parentsUntil(".foo").get(), parents.get(), "parentsUntil with invalid selector (nextAll)" );
+	deepEqual( jq("#groups").parentsUntil("#html").get(), parents.slice(0, -1).get(), "Simple parentsUntil check" );
+	equal( jq("#groups").parentsUntil("#ap").length, 0, "Simple parentsUntil check" );
+	deepEqual( jq("#nonnodes").contents().eq(1).parentsUntil("#html").eq(0).get(), q("nonnodes"), "Text node parentsUntil check" );
+	deepEqual( jq("#groups").parentsUntil("#html, #body").get(), parents.slice( 0, 3 ).get(), "Less simple parentsUntil check" );
+	deepEqual( jq("#groups").parentsUntil("#html", "div").get(), jq("#qunit-fixture").get(), "Filtered parentsUntil check" );
+	deepEqual( jq("#groups").parentsUntil("#html", "p,div,dl").get(), parents.slice( 0, 3 ).get(), "Multiple-filtered parentsUntil check" );
+	equal( jq("#groups").parentsUntil("#html", "span").length, 0, "Filtered parentsUntil check, no match" );
+	deepEqual( jq("#groups, #ap").parentsUntil("#html", "p,div,dl").get(), parents.slice( 0, 3 ).get(), "Multi-source, multiple-filtered parentsUntil check" );
+});
+
+test("next([String])", function() {
+	expect(6);
+	equal( jq("#ap").next()[0].id, "foo", "Simple next check" );
+	equal( jq("<div>text<a id='element'></a></div>").contents().eq(0).next().attr("id"), "element", "Text node next check" );
+	equal( jq("#ap").next("div")[0].id, "foo", "Filtered next check" );
+	equal( jq("#ap").next("p").length, 0, "Filtered next check, no match" );
+	equal( jq("#ap").next("div, p")[0].id, "foo", "Multiple filters" );
+	equal( jq("body").next().length, 0, "Simple next check, no match" );
+});
+
+test("prev([String])", function() {
+	expect(5);
+	equal( jq("#foo").prev()[0].id, "ap", "Simple prev check" );
+	deepEqual( jq("#nonnodes").contents().eq(1).prev().get(), q("nonnodesElement"), "Text node prev check" );
+	equal( jq("#foo").prev("p")[0].id, "ap", "Filtered prev check" );
+	equal( jq("#foo").prev("div").length, 0, "Filtered prev check, no match" );
+	equal( jq("#foo").prev("p, div")[0].id, "ap", "Multiple filters" );
+});
+
+test("nextAll([String])", function() {
+	expect(5);
+
+	var elems = jq("#form").children();
+
+	deepEqual( jq("#label-for").nextAll().get(), elems.slice(1).get(), "Simple nextAll check" );
+	equal( jq("<div>text<a id='element'></a></div>").contents().eq(0).nextAll().attr("id"), "element", "Text node nextAll check" );
+	deepEqual( jq("#label-for").nextAll("input").get(), elems.slice(1).filter("input").get(), "Filtered nextAll check" );
+	deepEqual( jq("#label-for").nextAll("input,select").get(), elems.slice(1).filter("input,select").get(), "Multiple-filtered nextAll check" );
+	deepEqual( jq("#label-for, #hidden1").nextAll("input,select").get(), elems.slice(1).filter("input,select").get(), "Multi-source, multiple-filtered nextAll check" );
+});
+
+test("prevAll([String])", function() {
+	expect(5);
+
+	var elems = jq( jq("#form").children().slice(0, 12).get().reverse() );
+
+	deepEqual( jq("#area1").prevAll().get(), elems.get(), "Simple prevAll check" );
+	deepEqual( jq("#nonnodes").contents().eq(1).prevAll().get(), q("nonnodesElement"), "Text node prevAll check" );
+	deepEqual( jq("#area1").prevAll("input").get(), elems.filter("input").get(), "Filtered prevAll check" );
+	deepEqual( jq("#area1").prevAll("input,select").get(), elems.filter("input,select").get(), "Multiple-filtered prevAll check" );
+	deepEqual( jq("#area1, #hidden1").prevAll("input,select").get(), elems.filter("input,select").get(), "Multi-source, multiple-filtered prevAll check" );
+});
+
+test("nextUntil([String])", function() {
+	expect(12);
+
+	var elems = jq("#form").children().slice( 2, 12 );
+
+	deepEqual( jq("#text1").nextUntil().get(), jq("#text1").nextAll().get(), "nextUntil with no selector (nextAll)" );
+	equal( jq("<div>text<a id='element'></a></div>").contents().eq(0).nextUntil().attr("id"), "element", "Text node nextUntil with no selector (nextAll)" );
+	deepEqual( jq("#text1").nextUntil(".foo").get(), jq("#text1").nextAll().get(), "nextUntil with invalid selector (nextAll)" );
+	deepEqual( jq("#text1").nextUntil("#area1").get(), elems.get(), "Simple nextUntil check" );
+	equal( jq("#text1").nextUntil("#text2").length, 0, "Simple nextUntil check" );
+	deepEqual( jq("#text1").nextUntil("#area1, #radio1").get(), jq("#text1").next().get(), "Less simple nextUntil check" );
+	deepEqual( jq("#text1").nextUntil("#area1", "input").get(), elems.not("button").get(), "Filtered nextUntil check" );
+	deepEqual( jq("#text1").nextUntil("#area1", "button").get(), elems.not("input").get(), "Filtered nextUntil check" );
+	deepEqual( jq("#text1").nextUntil("#area1", "button,input").get(), elems.get(), "Multiple-filtered nextUntil check" );
+	equal( jq("#text1").nextUntil("#area1", "div").length, 0, "Filtered nextUntil check, no match" );
+	deepEqual( jq("#text1, #hidden1").nextUntil("#area1", "button,input").get(), elems.get(), "Multi-source, multiple-filtered nextUntil check" );
+
+	deepEqual( jq("#text1").nextUntil("[class=foo]").get(), jq("#text1").nextAll().get(), "Non-element nodes must be skipped, since they have no attributes" );
+});
+
+test("prevUntil([String])", function() {
+	expect(11);
+
+	var elems = jq("#area1").prevAll();
+
+	deepEqual( jq("#area1").prevUntil().get(), elems.get(), "prevUntil with no selector (prevAll)" );
+	deepEqual( jq("#nonnodes").contents().eq(1).prevUntil().get(), q("nonnodesElement"), "Text node prevUntil with no selector (prevAll)" );
+	deepEqual( jq("#area1").prevUntil(".foo").get(), elems.get(), "prevUntil with invalid selector (prevAll)" );
+	deepEqual( jq("#area1").prevUntil("label").get(), elems.slice(0, -1).get(), "Simple prevUntil check" );
+	equal( jq("#area1").prevUntil("#button").length, 0, "Simple prevUntil check" );
+	deepEqual( jq("#area1").prevUntil("label, #search").get(), jq("#area1").prev().get(), "Less simple prevUntil check" );
+	deepEqual( jq("#area1").prevUntil("label", "input").get(), elems.slice(0, -1).not("button").get(), "Filtered prevUntil check" );
+	deepEqual( jq("#area1").prevUntil("label", "button").get(), elems.slice(0, -1).not("input").get(), "Filtered prevUntil check" );
+	deepEqual( jq("#area1").prevUntil("label", "button,input").get(), elems.slice(0, -1).get(), "Multiple-filtered prevUntil check" );
+	equal( jq("#area1").prevUntil("label", "div").length, 0, "Filtered prevUntil check, no match" );
+	deepEqual( jq("#area1, #hidden1").prevUntil("label", "button,input").get(), elems.slice(0, -1).get(), "Multi-source, multiple-filtered prevUntil check" );
+});
+
+test("contents()", function() {
+	expect(12);
+	var ibody, c;
+
+	equal( jq("#ap").contents().length, 9, "Check element contents" );
+	ok( jq("#iframe").contents()[0], "Check existence of IFrame document" );
+	ibody = jq("#loadediframe").contents()[0].body;
+	ok( ibody, "Check existence of IFrame body" );
+
+	equal( jq("span", ibody).text(), "span text", "Find span in IFrame and check its text" );
+
+	jq(ibody).append("<div>init text</div>");
+	equal( jq("div", ibody).length, 2, "Check the original div and the new div are in IFrame" );
+
+	equal( jq("div", ibody).last().text(), "init text", "Add text to div in IFrame" );
+
+	jq("div", ibody).last().text("div text");
+	equal( jq("div", ibody).last().text(), "div text", "Add text to div in IFrame" );
+
+	jq("div", ibody).last().remove();
+	equal( jq("div", ibody).length, 1, "Delete the div and check only one div left in IFrame" );
+
+	equal( jq("div", ibody).text(), "span text", "Make sure the correct div is still left after deletion in IFrame" );
+
+	jq("<table/>", ibody).append("<tr><td>cell</td></tr>").appendTo(ibody);
+	jq("table", ibody).remove();
+	equal( jq("div", ibody).length, 1, "Check for JS error on add and delete of a table in IFrame" );
+
+	// using contents will get comments regular, text, and comment nodes
+	c = jq("#nonnodes").contents().contents();
+	equal( c.length, 1, "Check node,textnode,comment contents is just one" );
+	equal( c[0].nodeValue, "hi", "Check node,textnode,comment contents is just the one from span" );
+});
+
+test("sort direction", function() {
+	expect( 12 );
+
+	var elems = jq("#ap, #select1 > *, #moretests > form"),
+		methodDirections = {
+			parent: false,
+			parents: true,
+			parentsUntil: true,
+			next: false,
+			prev: false,
+			nextAll: false,
+			prevAll: true,
+			nextUntil: false,
+			prevUntil: true,
+			siblings: false,
+			children: false,
+			contents: false
+		};
+
+	jq.each( methodDirections, function( method, reversed ) {
+		var actual = elems[ method ]().get(),
+			forward = jq.unique( [].concat( actual ) );
+		deepEqual( actual, reversed ? forward.reverse() : forward, "Correct sort direction for " + method );
+	});
+});
+
+test("add(String|Element|Array|undefined)", function() {
+	expect( 15 );
+
+	var divs, tmp, x, notDefined;
+
+	deepEqual( jq("#sndp").add("#en").add("#sap").get(), q("sndp", "en", "sap"), "Check elements from document" );
+	deepEqual( jq("#sndp").add( jq("#en")[0] ).add( jq("#sap") ).get(), q("sndp", "en", "sap"), "Check elements from document" );
+
+	// We no longer support .add(form.elements), unfortunately.
+	// There is no way, in browsers, to reliably determine the difference
+	// between form.elements and form - and doing .add(form) and having it
+	// add the form elements is way to unexpected, so this gets the boot.
+	// ok( jq([]).add(jq("#form")[0].elements).length >= 13, "Check elements from array" );
+
+	// For the time being, we're discontinuing support for jq(form.elements) since it's ambiguous in IE
+	// use jq([]).add(form.elements) instead.
+	//equal( jq([]).add(jq("#form")[0].elements).length, jq(jq("#form")[0].elements).length, "Array in constructor must equals array in add()" );
+
+	divs = jq("<div/>").add("#sndp");
+	ok( divs[0].parentNode, "Sort with the disconnected node last (started with disconnected first)." );
+
+	divs = jq("#sndp").add("<div/>");
+	ok( !divs[1].parentNode, "Sort with the disconnected node last." );
+
+	tmp = jq("<div/>");
+
+	x = jq([]).add(jq("<p id='x1'>xxx</p>").appendTo(tmp)).add(jq("<p id='x2'>xxx</p>").appendTo(tmp));
+	equal( x[0].id, "x1", "Check on-the-fly element1" );
+	equal( x[1].id, "x2", "Check on-the-fly element2" );
+
+	x = jq([]).add(jq("<p id='x1'>xxx</p>").appendTo(tmp)[0]).add(jq("<p id='x2'>xxx</p>").appendTo(tmp)[0]);
+	equal( x[0].id, "x1", "Check on-the-fly element1" );
+	equal( x[1].id, "x2", "Check on-the-fly element2" );
+
+	x = jq([]).add(jq("<p id='x1'>xxx</p>")).add(jq("<p id='x2'>xxx</p>"));
+	equal( x[0].id, "x1", "Check on-the-fly element1" );
+	equal( x[1].id, "x2", "Check on-the-fly element2" );
+
+	x = jq([]).add("<p id='x1'>xxx</p>").add("<p id='x2'>xxx</p>");
+	equal( x[0].id, "x1", "Check on-the-fly element1" );
+	equal( x[1].id, "x2", "Check on-the-fly element2" );
+
+	equal( jq([]).add(notDefined).length, 0, "Check that undefined adds nothing" );
+
+	equal( jq([]).add( document.getElementById("form") ).length, 1, "Add a form" );
+	equal( jq([]).add( document.getElementById("select1") ).length, 1, "Add a select" );
+});
+
+test("add(String, Context)", function() {
+	expect(6);
+
+	deepEqual( jq( "#firstp" ).add( "#ap" ).get(), q( "firstp", "ap" ), "Add selector to selector " );
+	deepEqual( jq( document.getElementById("firstp") ).add( "#ap" ).get(), q( "firstp", "ap" ), "Add gEBId to selector" );
+	deepEqual( jq( document.getElementById("firstp") ).add( document.getElementById("ap") ).get(), q( "firstp", "ap" ), "Add gEBId to gEBId" );
+
+	var ctx = document.getElementById("firstp");
+	deepEqual( jq( "#firstp" ).add( "#ap", ctx ).get(), q( "firstp" ), "Add selector to selector " );
+	deepEqual( jq( document.getElementById("firstp") ).add( "#ap", ctx ).get(), q( "firstp" ), "Add gEBId to selector, not in context" );
+	deepEqual( jq( document.getElementById("firstp") ).add( "#ap", document.getElementsByTagName("body")[0] ).get(), q( "firstp", "ap" ), "Add gEBId to selector, in context" );
+});
+
+test("eq('-1') #10616", function() {
+	expect(3);
+	var $divs = jq( "div" );
+
+	equal( $divs.eq( -1 ).length, 1, "The number -1 returns a selection that has length 1" );
+	equal( $divs.eq( "-1" ).length, 1, "The string '-1' returns a selection that has length 1" );
+	deepEqual( $divs.eq( "-1" ), $divs.eq( -1 ), "String and number -1 match" );
+});
+
+test("index(no arg) #10977", function() {
+	expect(2);
+	var $list, fragment, div;
+
+	$list = jq("<ul id='indextest'><li class='zero'>THIS ONE</li><li class='one'>a</li><li class='two'>b</li><li class='three'>c</li></ul>");
+	jq("#qunit-fixture").append( $list );
+	strictEqual ( jq( "#indextest li.zero" ).first().index() , 0, "No Argument Index Check" );
+	$list.remove();
+
+	fragment = document.createDocumentFragment();
+	div = fragment.appendChild( document.createElement("div") );
+
+	equal( jq( div ).index(), 0, "If jq#index called on element whose parent is fragment, it still should work correctly" );
+});
+
+test("traversing non-elements with attribute filters (#12523)", function() {
+	expect(5);
+
+	var nonnodes = jq("#nonnodes").contents();
+
+	equal( nonnodes.filter("[id]").length, 1, ".filter" );
+	equal( nonnodes.find("[id]").length, 0, ".find" );
+	strictEqual( nonnodes.is("[id]"), true, ".is" );
+	deepEqual( nonnodes.closest("[id='nonnodes']").get(), q("nonnodes"), ".closest" );
+	deepEqual( nonnodes.parents("[id='nonnodes']").get(), q("nonnodes"), ".parents" );
+});
+
+  </script>
+</body>
+</html>

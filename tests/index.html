@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>small Query test page</title>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script type="text/javascript">
+	  $$ = jQuery.noConflict(true);
+    </script>
+    <script type="text/javascript" src="../js/deferred.js"></script>
+    <script type="text/javascript" src="../js/jq.js"></script>
+    <style type="text/css">
+        .same{
+            display:inline;
+        }
+
+		a{
+			display:inline;
+		}
+        
+        #outer{
+            position:relative;
+            height: 50px;
+            width:200px;
+            background-color:blue;
+        }
+        
+        #inner{
+            position:absolute;
+            height: 30px;
+            width:150px;
+            left:150px;
+            background-color:green;
+        }
+        
+        #div3{
+            width:150px;
+            height:50px;
+            background-color:yellow;
+            text-align:center;
+        }
+        
+        #div4{
+            color:white;
+            display:inline-block;
+            position:relative;
+            width:90%;
+            height:90%;
+            background-color:blue;
+        }        
+    </style>
+</head>
+<body>
+ <div>value1 before creation: <span></span></div>
+  <div>value1 after creation: <span></span></div>
+  <div>value1 after removal: <span></span></div>
+ 
+  <div>value2 after removal: <span></span></div>
+<script>
+ 
+    $("span").eq(0).text("" + $("div").data("test1"));
+    $("div").data("test1", "VALUE-1");
+    $("div").data("test2", "VALUE-2");
+    $("span").eq(1).text("" + $("div").data("test1"));
+    $("div").removeData("test1");
+    $("span").eq(2).text("" + $("div").data("test1"));
+    $("span").eq(3).text("" + $("div").data("test2"));
+ 
+</script>
+    
+	<button id="button1"><span>MyButton</span></button>
+	<button id="button2">MyButton 2</button>
+	<div id="div3"><div id="div4">Div 4</div></div>
+	<span id="mySpan">mySpan</span>
+    
+    <div id="testData" data-test="dtc"></div>
+    
+	<div id="testIndex">
+        sqfqsfqsfgqfs
+		<div class="test1 nextAll"></div>
+		<span class="test2"></span>
+		<div class="test3"></div>
+		<span class="test4"></span>
+	</div>
+
+    <ul class="level-1">
+      <li class="item-i">I</li>
+      <li class="item-ii">II
+        <ul class="level-2">
+          <li class="item-a">A</li>
+          <li class="item-b">B
+            <ul class="level-3">
+			  <li class="item-1">1</li>
+              <li class="item-2">2</li>
+              <li class="item-3">3</li>
+            </ul>
+          </li>
+          <li class="item-c">C</li>
+        </ul>
+      </li>
+      <li class="item-iii">III</li>
+    </ul>
+    
+    <div id="test">
+        <div class="test1 nextAll">
+            <div class="test11">
+                <div class="same" style="display:none;">Same</div>
+            </div>
+            <div class="test12"></div>
+        </div>
+        <div class="test2">
+            <div class="test21">
+                <div class="same">Same</div>
+            </div>
+            <div class="test22"></div>
+        </div>
+    </div>
+    <div id="outer">
+        <div id="inner"></div>
+    </div>
+    <br /><br />
+    <form>
+        <label>Name: <input type="text" name="input" value="dtc" /></label><br />
+        <label>Options: <select name="select">
+            <option value="value1">Value 1</option> 
+            <option value="value2" selected>Value 2</option>
+            <option value="value3">Value 3</option>
+        </select></label><br /><br />
+        <label>Options 2: <select name="select2">
+            <option value="value1">Value 1</option> 
+            <option value="value2">Value 2</option>
+            <option value="value3">Value 3</option>
+        </select></label><br /><br />
+        <label>Options 3: <select name="select3" multiple>
+            <option value="value1">Value 1</option> 
+            <option value="value2">Value 2</option>
+            <option value="value3">Value 3</option>
+        </select></label><br /><br />        
+        <label>Description:<br /><textarea name="textarea" rows="6">Lorem Ipsum...</textarea></label><br /><br />
+        <label>Genre:</label><br />
+        <input type="radio" name="genre" value="male" />Male<br />
+        <input type="radio" name="genre" value="female" />Female<br /><br />
+        <label>Vehicle:</label><br />
+        <input type="checkbox" name="vehicle" value="Bike" />I have a bike<br />
+        <input type="checkbox" name="vehicle" value="Car" />I have a car         
+    </form>
+    
+    <div id="chris">
+        <div></div><span></span><div>fsqsf</div><p></p>
+    </div>
+    
+    <img src="https://www.google.fr/images/srpr/logo4w.png" style="display:none;" id="googleImg" />
+</body>
+</html>

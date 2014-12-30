@@ -1,0 +1,37 @@
+{
+  "name": "jq",
+  "version": "0.1.0",
+  "homepage": "https://github.com/warpdesign/jq-js",
+  "description": "Modular jQuery-compatible library for modern browsers",
+  "author": {
+    "name": "Nicolas Ramz",
+    "url": "http://warpdesign.fr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/warpdesign/jq-js.git"
+  },
+  "keywords": [
+    "jquery",
+    "javascript",
+    "modular",
+    "library"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/warpdesign/jq-js/master/LICENSE"
+    }
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-requirejs": "~0.4.1",
+    "grunt-contrib-compress": "~0.5.2",
+    "qunitjs": "~1.14.0",
+    "karma": "~0.12.16",
+    "karma-qunit": "~0.1.3",
+    "requirejs": "~2.1.14",
+    "karma-requirejs": "~0.2.2",
+    "grunt-contrib-connect": "~0.8.0"
+  }
+}

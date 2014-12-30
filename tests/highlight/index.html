@@ -1,0 +1,27 @@
+<!DOCTYPE index>
+<html>
+<head>
+	<link rel="stylesheet" href="styles/default.css">
+	<script type="text/javascript" src="../../build/jq.min.js"></script>
+	<script type="text/javascript" src="highlight.pack.js"></script>
+	<script type="text/javascript">
+$(document).ready(function() {
+	console.log('plop');
+  $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
+});
+	</script>
+</head>
+<body>
+<pre><code>
+var test = function(a, b) {
+	console.log('plop');
+}
+</code></pre>
+<div class="container">
+  <div class="inner first">Hello</div>
+  <div class="inner second">And</div>
+  <div class="inner third">Goodbye</div>
+</div>
+</body>
+<iframe></iframe>
+</html>
