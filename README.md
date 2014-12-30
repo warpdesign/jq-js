@@ -233,7 +233,7 @@ Licence
 
 This software is distributed under an MIT licence.
 
-Copyright 2012 © Nicolas Ramz
+Copyright 2014 © Nicolas Ramz
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 > and associated documentation files (the "Software"), to deal in the Software without
