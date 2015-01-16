@@ -31,7 +31,8 @@ module.exports = function(grunt) {
 
         // replace version string with current pkg.version
         if (/core\./.test(path)) {
-            contents = contents.replace("@VERSION", grunt.config( "pkg.version" ));
+            contents = contents.replace(/@VERSION/g, grunt.config( "pkg.version" ));
+            contents = contents.replace(/@MODULES/g, grunt.config( "pkg.modules" ));
         }
     
         // Remove define wrappers, closure ends, and empty declarations
@@ -80,7 +81,10 @@ module.exports = function(grunt) {
       cmdModules = arguments[0].split(','),
       startBuildStr = 'define([',
       endBuildStr = '], function(jq) { return jq; });',
-      customBuildStr = '';
+      customBuildStr = '',
+      gruntConfig = grunt.file.readJSON('package.json');
+      
+      gruntConfig.modules = cmdModules;
       
       cmdModules.forEach(function(path) {
           if (availableModules[path] && availableModules[path].length) {
@@ -98,7 +102,7 @@ module.exports = function(grunt) {
 
       // configure grunt for our task
       grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: gruntConfig,
         compress: {
           main: {
             options: {

@@ -214,6 +214,16 @@ grunt custom:event,data
 Note that some modules may depend on other modules so if you omit a required module, it will automatically be added
 to the modules list.
 
+To get a list of modules included in your jq build you may use jq.fn.jq.modules
+
+jq defines the special jq.fn.jq hash which shows jq's version and modules included into the build:
+
+~~~ sh
+> jq.fn.jq
+Object {version: "0.1.0", modules: "event,data"}
+~~~
+
+As core is always included, it doesn't appear in the list of modules.
 
 Tests
 -----
@@ -233,7 +243,7 @@ Licence
 
 This software is distributed under an MIT licence.
 
-Copyright 2014 © Nicolas Ramz
+Copyright 2014-2015 © Nicolas Ramz
 
 > Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 > and associated documentation files (the "Software"), to deal in the Software without

@@ -21,6 +21,33 @@ define(['core'], function(jq) {
         return this;
     };
 
+    jq.prototype.after = function(content) {
+      if (content) {
+        if (content instanceof HTMLElement) {
+          this.forEach(function(element) {
+            var parent = element.parentElement;
+            if (parent) {
+              parent.insertBefore(content, element.nextSibling);
+            }
+          });
+        } else if (content instanceof jq) {
+          this.forEach(function(element) {
+            content.forEach(function(subcontent) {
+              var parent = element.parentElement;
+              if (parent) {
+                parent.insertBefore(subcontent, element.nextSibling);
+              }
+            });
+          });
+        } else if (content && content.length) {
+          this.forEach(function(element) {
+            element.innerHTML = element.innerHTML + content;
+          });
+        }
+      }
+      return this;
+    };
+    
     jq.prototype.prepend = function(content) {
         if (content) {
             if (content instanceof HTMLElement) {

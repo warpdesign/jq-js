@@ -85,6 +85,12 @@ define(['core/extend', 'core/buildFragment', 'utils/inArray', 'utils/isFunction'
         }
     }
 
+    if ( typeof define === "function" && define.amd ) {
+      define( "jquery", [], function() {
+        return jq;
+      });
+    }
+    
 	// TODO check me: even if elt is String or Number, fn should be called with an object as this
 	jq.each = function(elt, fn) {
 		var i = 0,
@@ -202,7 +208,10 @@ define(['core/extend', 'core/buildFragment', 'utils/inArray', 'utils/isFunction'
     jq.modules = {};
     
     jq.fn.jquery = "1.8.0 - jq version @VERSION";
-    jq.fn.jq = "@VERSION";
+    jq.fn.jq = {
+        version: "@VERSION",
+        modules: "@MODULES"
+    };
     
     return jq;
 });
