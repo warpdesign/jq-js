@@ -2,9 +2,9 @@
 
 jq-js is a reimplemention of a subset of jQuery 1.8+ APIs for modern browsers in a modular way.
 
-It is only made as an educationnal purpose since some very complete and solid (read: bug-free and fast ;)) jQuery reimplementations only exists (like Zepto).
+ * [Website] (http://jq-js.com)
 
-Compared with these implementations, jq-js lacks a selector engine and only relies on standard querySelectorAll and matchesSelector methods so it's severly limited when compared with jQuery & Zepto.
+jq only implements a subset of jQuery and lacks a selector engine (it relies on standard querySelectorAll and matchesSelector).
 
 jq-js also won't support older browsers and requires a fresh build of your prefered browser (see Requirements below).
 
@@ -14,7 +14,13 @@ jq-js is licensed under the terms of the MIT License.
 Building
 --------
 
-You will need to have node and grunt.
+#### Using the web front-end
+
+ * open [jq-js.com] (http://jq-js.com)
+ * select the modules you want to include in your build
+ * select `build` or `generate` and voila :)
+ 
+#### Using the command line (requires node and grunt)
 
 ~~~ sh
 # install needed nodejs modules
@@ -29,16 +35,6 @@ The resulting built files will be put into build/ directory:
 jq.min.js: minified js file, ready to be used
 jq.min.js.gz minidefied gzipped file, ready to be served
 
-
-Building your custom jq-js version
-----------------------------------
-
-#### Using the web front-end
- * open [jq-js.com] (http://jq-js.com)
- * select the modules you want to include in your build
- * voila :)
-
-#### Using the command line
 
 To build a custom version of jq-js, simply include a list of comma-separated module names:
 
