@@ -11,98 +11,6 @@ jq-js also won't support older browsers and requires a fresh build of your prefe
 jq-js is licensed under the terms of the MIT License.
 
 
-Currently supported
--------------------
-
-Here is a list of the APIs that are supported by jq-js. Note that some APIs may be incomplete.
-
- - $._data (internal)
- - $._removeData (internal)
- - $.ajax
- - $.ajaxOptions
- - $.css (not documented ?)
- - $.each
- - $.extend
- - $.getScript
- - $.inArray
- - $.isArray
- - $.isFunction
- - $.isNumeric
- - $.noConflict
- - $.holdReady
- - $.trim
-
- - .add
- - .addClass
- - .ajax
- - .ajaxSetup
- - .animate
- - .append
- - .appendTo
- - .attr
- - .bind
- - .children
- - .clone
- - .contents
- - .css
- - .each
- - .end
- - .eq
- - .fadeIn
- - .fadeOut
- - .filter
- - .find
- - .first
- - .get
- - .getScript
- - .hasClass
- - .height
- - .hide
- - .hover
- - .html
- - .index
- - .is
- - .last
- - .off
- - .offset
- - .on
- - .parent
- - .parents
- - .parentsUntil
- - .position
- - .post
- - .ready
- - .remove
- - .removeAttr
- - .removeClass
- - .scrollTop
- - .show
- - .text
- - .toggle
- - .toggleClass
- - .val
- - .width
- - .blur, .change, .click, .error, .focus, .focusin, .focusout, .hover, .keydown, .keyup, .keypress, .load, .mousedown, .mouseenter, .mouseleave, .mousemove, .mouseout, .mouseover, .mouseup, .resize, .scroll, .select, .submit, .unload
-
-
-
-Browser Required
-----------------
- - IE 10
- - Chrome 27
- - Safari 6
- - Firefox 22
-
-
-jq-js in the real world
------------------------
-Although jq-js is experimental, I have already been successfully using it for my own projects:
-
- - [http://nicolasramz.fr](http://nicolasramz.fr)
- 
-Deferred-js which is part of jq-js has also been used in numerous projects.
-
-
 Building
 --------
 
@@ -120,6 +28,38 @@ The resulting built files will be put into build/ directory:
 
 jq.min.js: minified js file, ready to be used
 jq.min.js.gz minidefied gzipped file, ready to be served
+
+
+Building your custom jq-js version
+----------------------------------
+
+#### Using the web front-end
+ * open [jq-js.com] (http://jq-js.com)
+ * select the modules you want to include in your build
+ * voila :)
+
+#### Using the command line
+
+To build a custom version of jq-js, simply include a list of comma-separated module names:
+
+~~~ sh
+# generate a build with only event and data modules
+grunt custom:event,data
+~~~
+
+Note that some modules may depend on other modules so if you omit a required module, it will automatically be added
+to the modules list.
+
+To get a list of modules included in your jq build you may use jq.fn.jq.modules
+
+jq defines the special jq.fn.jq hash which shows jq's version and modules included into the build:
+
+~~~ sh
+> jq.fn.jq
+Object {version: "0.1.0", modules: "event,data"}
+~~~
+
+As core is always included, it doesn't appear in the list of modules.
 
 
 jq-js modules
@@ -201,29 +141,97 @@ Here is a list of every jq-js modules:
 </table>
 
 
-Building your custom jq-js version
-----------------------------------
+Currently supported
+-------------------
 
-To build a custom version of jq-js, simply include a list of comma-separated module names:
+Here is a list of the APIs that are supported by jq-js. Note that some APIs may be incomplete.
 
-~~~ sh
-# generate a build with only event and data modules
-grunt custom:event,data
-~~~
+ - $._data (internal)
+ - $._removeData (internal)
+ - $.ajax
+ - $.ajaxOptions
+ - $.css (not documented ?)
+ - $.each
+ - $.extend
+ - $.getScript
+ - $.inArray
+ - $.isArray
+ - $.isFunction
+ - $.isNumeric
+ - $.noConflict
+ - $.holdReady
+ - $.trim
 
-Note that some modules may depend on other modules so if you omit a required module, it will automatically be added
-to the modules list.
+ - .add
+ - .addClass
+ - .ajax
+ - .ajaxSetup
+ - .animate
+ - .append
+ - .appendTo
+ - .attr
+ - .after
+ - .bind
+ - .children
+ - .clone
+ - .contents
+ - .css
+ - .each
+ - .end
+ - .eq
+ - .fadeIn
+ - .fadeOut
+ - .filter
+ - .find
+ - .first
+ - .get
+ - .getScript
+ - .hasClass
+ - .height
+ - .hide
+ - .hover
+ - .html
+ - .index
+ - .is
+ - .last
+ - .off
+ - .offset
+ - .on
+ - .parent
+ - .parents
+ - .parentsUntil
+ - .position
+ - .post
+ - .ready
+ - .remove
+ - .removeAttr
+ - .removeClass
+ - .scrollTop
+ - .show
+ - .text
+ - .toggle
+ - .toggleClass
+ - .val
+ - .width
+ - .blur, .change, .click, .error, .focus, .focusin, .focusout, .hover, .keydown, .keyup, .keypress, .load, .mousedown, .mouseenter, .mouseleave, .mousemove, .mouseout, .mouseover, .mouseup, .resize, .scroll, .select, .submit, .unload
 
-To get a list of modules included in your jq build you may use jq.fn.jq.modules
 
-jq defines the special jq.fn.jq hash which shows jq's version and modules included into the build:
+Browser Required
+----------------
+ - IE 10
+ - Chrome 27
+ - Safari 6
+ - Firefox 22
 
-~~~ sh
-> jq.fn.jq
-Object {version: "0.1.0", modules: "event,data"}
-~~~
 
-As core is always included, it doesn't appear in the list of modules.
+jq-js in the real world
+-----------------------
+Although jq-js is experimental, I have already been successfully using it for my own projects:
+
+ - [http://nicolasramz.fr](http://nicolasramz.fr)
+ 
+Deferred-js which is part of jq-js has also been used in numerous projects.
+
 
 Tests
 -----
@@ -237,6 +245,7 @@ lots of tests will fail.
 Testing right now is rather rudimentary and uses patched jQuery test files. A lot could been done to ease testing.
 
 If you want to help, don't hesitate! :)
+
 
 Licence
 -------
