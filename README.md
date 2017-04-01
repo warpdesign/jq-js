@@ -2,8 +2,6 @@
 
 jq-js is a reimplemention of a subset of jQuery 1.8+ APIs for modern browsers in a modular way.
 
- * [Website] (http://jq-js.com)
-
 jq only implements a subset of jQuery and lacks a selector engine (it relies on standard querySelectorAll and matchesSelector).
 
 jq-js also won't support older browsers and requires a fresh build of your prefered browser (see Requirements below).
@@ -14,12 +12,6 @@ jq-js is licensed under the terms of the MIT License.
 Building
 --------
 
-#### Using the web front-end
-
- * open [jq-js.com] (http://jq-js.com)
- * select the modules you want to include in your build
- * select `build` or `generate` and voila :)
- 
 #### Using the command line (requires node and grunt)
 
 ~~~ sh
@@ -226,7 +218,7 @@ Although jq-js is experimental, I have already been successfully using it for my
 
  - [http://nicolasramz.fr](http://nicolasramz.fr)
  
-Deferred-js which is part of jq-js has also been used in numerous projects.
+Deferred-js which is part of [https://github.com/warpdesign/deferred-js](jq-js) has also been used in numerous projects.
 
 
 Tests
